@@ -1,10 +1,25 @@
-#station data formatter script
+#=======================================================
+#Author: Tony Chang
+#Institution: Montana State University
+#Department: Ecology
+#Date: 07.08.2013
+#=======================================================
+'''
+#	Abstract:
+#	Toolset of functions to format NCDC Global Historical Climate Network dataset for analysis
+#
+#	Dependency:
+#	GCHND-stations.txt, 
+#	Uncompressed GHCND-all.tar.gz daily .dly data files for individual stations
+
+'''
+
 import numpy as np
 import csv
 from matplotlib import pyplot as plt
 
 def stationreader():
-	workspace = "D:\\chang\\climate_models\\station_data\\ghcn_daily\\"
+	workspace = "D:\\chang\\climate_models\\station_data\\ghcn_daily\\" #change this according to your local machine file address
 	filename = "ghcnd-stations.txt"
 	f = workspace + filename
 	s =[]
@@ -57,7 +72,7 @@ def stationfilter(station, xmin,xmax,ymin,ymax, minelev= 0, maxelev= 9999): #fil
 	return(fstation)
 	
 def datareader(stationid): #input station desired 
-	workspace = "d:\\chang\\climate_models\\station_data\\ghcn_daily\\ghcnd_all\\ghcnd_all\\"
+	workspace = "d:\\chang\\climate_models\\station_data\\ghcn_daily\\ghcnd_all\\ghcnd_all\\" #change this to your local machine file address
 	data = []
 	filename = stationid + '.dly'
 	f = workspace + filename
@@ -327,7 +342,7 @@ fstation1 = stationfilter(stationlist, xmin, xmax, ymin, ymax, min_e1, max_e1) #
 fstation2 = stationfilter(stationlist, xmin, xmax, ymin, ymax, min_e2, max_e2)
 dataset1 = datagather(fstation1)
 dataset2 = datagather(fstation2)
-var = 'SNWD'
+var = 'TMIN'
 tmindata1 = databyvar(dataset1,var)
 tmindata2 = databyvar(dataset2,var)
 atmin1,stat1 = regionalsummary(tmindata1,'a')
