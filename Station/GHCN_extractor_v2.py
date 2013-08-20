@@ -11,7 +11,7 @@
 #	Dependency:
 #	GCHND-stations.txt, 
 #	Uncompressed GHCND-all.tar.gz daily .dly data files for individual stations
-
+#	Download at   ftp://ftp.ncdc.noaa.gov/pub/data/ghcn/daily
 '''
 
 import numpy as np
@@ -59,8 +59,13 @@ def formatdata(stationlist, var, time):
 	
 #GYE extent
 #xmin = -112.438; xmax = -108.271; ymin = 42.262; ymax = 46.187
-def stationfilter(station, xmin,xmax,ymin,ymax, minelev= 0, maxelev= 9999): #filters the station list by the bounding box extent and desired elevation range
+#aoa = [-122.438,-108.271,42.262,46.187]
+def stationfilter(station, aoa, minelev= 0, maxelev= 9999): #filters the station list by the bounding box extent and desired elevation range
 	fstation = []
+	xmin = aoa[0]
+	xmax = aoa[1]
+	ymin = aoa[2]
+	ymax = aoa[3]
 	dt = [('code', 'S11'),('lat', 'f8'),('lon','f8'),('ele','f8'),('st','S2'),('name', 'S30'),('gsn','S3'),('hcn','S3'),('wmo','f5')]
 	for i in range(len(station['code'])):
 			sy = station['lat'][i]
@@ -334,12 +339,13 @@ def annualsummary(dataset):
 #-------MAIN-------#
 xmin = -112.438; xmax = -108.271; ymin = 42.262; ymax = 46.187 #GYE bounding box
 #xmin = -114.62; xmax = -108.271; ymin = 41.87; ymax = 47.4 #ecoregion III middle rockies bounding box
+aoa = [xmin,xmax,ymin,ymax]
 min_e1 = 0; max_e1 = 2250; min_e2 = 2250; max_e2=9999
 stationlist = stationreader() #this loads the full station list into memory
 '''
 #example code below for extracting station data
-fstation1 = stationfilter(stationlist, xmin, xmax, ymin, ymax, min_e1, max_e1) #from here filter the full station list by the desire extent and elevation
-fstation2 = stationfilter(stationlist, xmin, xmax, ymin, ymax, min_e2, max_e2)
+fstation1 = stationfilter(stationlist, aoa, min_e1, max_e1) #from here filter the full station list by the desire extent and elevation
+fstation2 = stationfilter(stationlist, aoa, min_e2, max_e2)
 dataset1 = datagather(fstation1)
 dataset2 = datagather(fstation2)
 var = 'TMIN'
