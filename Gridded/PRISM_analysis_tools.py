@@ -94,7 +94,7 @@ def PRISMdataextract(BeginYear, EndYear, var, AOA):
 	#Start gathering data
 	Pdata = [] #define empty array to store PRISM classes
 	for searchyear in range(BeginYear, EndYear+1): #looping through years of interest
-		for filenum in range(1, 15):
+		for filenum in range(1, 13):
 			addmatrix = []              #List to store PRISM ascii data
 			if filenum == 13:
 				continue                #month 13 does not exist, skip to the next iteration
@@ -132,14 +132,16 @@ def annualgrid(data):  #generates the PRISM grids at an annual time step
 	counter =0
 	while (i<len(data)):
 		if (currentyear == data[i].year):
-			anu_year+=data[i].data
-			counter +=1
+			anu_year += data[i].data
+			counter += 1
 		elif (currentyear != data[i].year):
 			x =Annualclimatedata(data[i-1].year,anu_year/counter)
 			anu_series.append(x)
 			counter = 0
 			currentyear = data[i].year
 			anu_year = np.zeros(np.shape(data[0].data))
+			anu_year += data[i].data
+			counter += 1
 		i+=1
 	#last iteration
 	x =Annualclimatedata(data[i-1].year,anu_year/counter)
