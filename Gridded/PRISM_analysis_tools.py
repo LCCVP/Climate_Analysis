@@ -121,7 +121,8 @@ def PRISMdataextract(BeginYear, EndYear, var, AOA):
 			Pdata.append(x) 
 	return(Pdata)
 
-def annualgrid(data):  #generates the PRISM grids at an annual time step
+def annualgrid(data,p='n'):  #generates the PRISM grids at an annual time step
+	#p parameter designates ppt data. Calculates the sum for ppt of the year rather than monthly mean
 	numyears = int(len(data)/12)
 	anu_year = np.zeros(np.shape(data[0].data))
 	anu_series = []
@@ -135,7 +136,10 @@ def annualgrid(data):  #generates the PRISM grids at an annual time step
 			anu_year += data[i].data
 			counter += 1
 		elif (currentyear != data[i].year):
-			x =Annualclimatedata(data[i-1].year,anu_year/counter)
+			if (p=='n'):
+				x =Annualclimatedata(data[i-1].year,anu_year/counter)
+			else:
+				x =Annualclimatedata(data[i-1].year,anu_year)
 			anu_series.append(x)
 			counter = 0
 			currentyear = data[i].year
@@ -144,7 +148,10 @@ def annualgrid(data):  #generates the PRISM grids at an annual time step
 			counter += 1
 		i+=1
 	#last iteration
-	x =Annualclimatedata(data[i-1].year,anu_year/counter)
+	if (p=='n'):
+		x =Annualclimatedata(data[i-1].year,anu_year/counter)
+	else:
+		x =Annualclimatedata(data[i-1].year,anu_year)
 	anu_series.append(x)
 	return(anu_series)  
 
